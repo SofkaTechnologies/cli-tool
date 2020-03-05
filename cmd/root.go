@@ -17,9 +17,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/hashicorp/go-getter"
 	"github.com/spf13/cobra"
+	"net/http"
 	"os"
 
+	"../utils"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
@@ -51,18 +54,30 @@ func Execute() {
 	}
 }
 
+type updater struct {
+}
+
+func (updater) Get(destination string, url string) error {
+	return getter.Get(destination, url)
+}
+
+func (updater) Head(url string) (*http.Response, error) {
+	return http.Head(url)
+}
+
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	var updaterImpl updater
+	utils.AutoUpdate(updaterImpl)
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cli.yaml)")
-
+	//rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cli.yaml)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
 
