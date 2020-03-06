@@ -1,8 +1,8 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
-	//"github.com/hashicorp/go-getter"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -14,13 +14,15 @@ type Updater interface {
 	Head(url string) (*http.Response, error)
 }
 
-func AutoUpdate(updater Updater) {
+func AutoUpdate(updater Updater) error {
 	fmt.Println("Checking available versions of the cli for " + runtime.GOOS + "...")
 	version := "M_h7YM2gafrSBWfkc1yLNo8wzRyU4cnA"
 	binaryUrl := "https://cli-tool.s3.amazonaws.com/bin/" + runtime.GOOS + "/sofka-cli.zip"
 	res, err := updater.Head(binaryUrl)
 	if err != nil {
-		panic(err)
+		if err != nil {
+			return errors.New("error getting version info" + err.Error())
+		}
 	}
 	const versionHeader = "X-Amz-Version-Id"
 	if version != res.Header[versionHeader][0] {
@@ -29,7 +31,7 @@ func AutoUpdate(updater Updater) {
 		destination := dir + "/updated"
 		err = updater.Get(destination, binaryUrl)
 		if err != nil {
-			panic(err)
+			return errors.New("error downloading file" + err.Error())
 		}
 		fmt.Println("Done...")
 		fmt.Println("Please rerun the program to use the new version downloaded to " + destination)
@@ -37,4 +39,5 @@ func AutoUpdate(updater Updater) {
 	} else {
 		fmt.Println("Using latest  version")
 	}
+	return nil
 }
