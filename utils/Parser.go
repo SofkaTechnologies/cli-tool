@@ -14,12 +14,24 @@ type ProjectSettings struct {
 	Entity  string
 }
 
+var funcMap = template.FuncMap{
+	"title": strings.Title,
+	"lower": strings.ToLower,
+	"upper": strings.ToUpper,
+}
+
 func ParseFile(file string, tp ProjectSettings) {
 	paths := []string{
 		file,
 	}
+
+	if strings.Contains(paths[0], ".png") {
+		return
+	}
+
 	var t *template.Template
-	t = template.Must(template.New(filepath.Base(paths[0])).ParseFiles(paths...))
+
+	t = template.Must(template.New(filepath.Base(paths[0])).Funcs(funcMap).ParseFiles(paths...))
 	f, ex := os.Create(paths[0])
 	if ex != nil {
 		panic(ex)
@@ -34,7 +46,7 @@ func ParseFile(file string, tp ProjectSettings) {
 func revealPaths(folder string, tp ProjectSettings) string {
 	tp.Group = strings.ReplaceAll(tp.Group, ".", string(os.PathSeparator))
 	var t *template.Template
-	t, err := template.New(folder).Parse(folder)
+	t, err := template.New(folder).Funcs(funcMap).Parse(folder)
 	if err != nil {
 		panic(err)
 	}

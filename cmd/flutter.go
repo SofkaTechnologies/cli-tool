@@ -23,9 +23,9 @@ import (
 )
 
 // javaCmd represents the initJava command
-var javaCmd = &cobra.Command{
-	Use:   "java",
-	Short: "Java base project template",
+var flutterCmd = &cobra.Command{
+	Use:   "flutter",
+	Short: "Flutter base project template",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -34,7 +34,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Java called")
+		fmt.Println("Flutter called")
 		//
 		//file, ex := filepath.Abs("./templates/java/gradle/settings.gradle")
 		//if ex == nil {
@@ -50,12 +50,12 @@ to quickly create a Cobra application.`,
 		group := viper.GetString("group")
 		destinationPath := viper.GetString("path")
 		tp := utils.ProjectSettings{Project: projectName, Group: group}
-		utils.CreateDirectoryStructure(destinationPath, "java", projectType, tp)
+		utils.CreateDirectoryStructure(destinationPath, "flutter", projectType, tp)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(javaCmd)
+	rootCmd.AddCommand(flutterCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -65,9 +65,9 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	javaCmd.PersistentFlags().StringP("type", "t", "", "Select between Gradle or Maven")
-	javaCmd.PersistentFlags().StringP("path", "p", "", "Project's export path")
-	javaCmd.PersistentFlags().StringP("name", "n", "", "Project's name")
-	javaCmd.PersistentFlags().StringP("group", "g", "", "Project's group")
+	flutterCmd.PersistentFlags().StringP("type", "t", "", "Select between Gradle or Maven")
+	flutterCmd.PersistentFlags().StringP("path", "p", "", "Project's export path")
+	flutterCmd.PersistentFlags().StringP("name", "n", "", "Project's name")
+	flutterCmd.PersistentFlags().StringP("group", "g", "", "Project's group")
 
 }
