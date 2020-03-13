@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"github.com/iancoleman/strcase"
 	"os"
 	"path/filepath"
 	"strings"
@@ -15,9 +16,11 @@ type ProjectSettings struct {
 }
 
 var funcMap = template.FuncMap{
-	"title": strings.Title,
-	"lower": strings.ToLower,
-	"upper": strings.ToUpper,
+	"title":  strings.Title,
+	"lower":  strings.ToLower,
+	"upper":  strings.ToUpper,
+	"pascal": strcase.ToCamel,
+	"snake":  strcase.ToSnake,
 }
 
 func ParseFile(file string, tp ProjectSettings) {
