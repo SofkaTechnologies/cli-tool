@@ -33,17 +33,12 @@ func CreateDirectoryStructure(destination string, language string, fileName stri
 		panic(err)
 	}
 
-	err = gorecurcopy.CopyDirectory(source, destination)
+	err = ParsePaths(source, tp)
 	if err != nil {
 		panic(err)
 	}
 
-	err = ParsePaths(destination, tp)
-	if err != nil {
-		panic(err)
-	}
-
-	paths, err := walkFiles(destination)
+	paths, err := walkFiles(source)
 	if err != nil {
 		panic(err)
 	}
@@ -51,6 +46,12 @@ func CreateDirectoryStructure(destination string, language string, fileName stri
 	for _, file := range paths {
 		ParseFile(file, tp)
 	}
+
+	err = gorecurcopy.CopyDirectory(source, destination)
+	if err != nil {
+		panic(err)
+	}
+
 	err = os.RemoveAll(source)
 	if err != nil {
 		panic(err)
